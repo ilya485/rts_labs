@@ -17,6 +17,8 @@ import java.util.Random;
 import static javafx.application.Application.launch;
 
 public class Main extends Application {
+    double [][] W_real;
+    double [][] W_image;
 
     public static float[] graph() {
 
@@ -39,16 +41,29 @@ public class Main extends Application {
         return x;
     }
 
-    public static double[][] DFT(float[] x) {
+    public double[][] DFT(float[] x) {
         int N = x.length;
         double[][] dft = new double[x.length][2]; //перший стовпчик - дійсна частина, другий - уявна
+        coef(N);
         for (int p = 0; p < N; p++) {
             for (int k = 0; k < N; k++) {
-                dft[p][0] += Math.cos(2 * Math.PI * p * k / N) * x[k];
-                dft[p][1] += Math.sin(-2 * Math.PI * p * k / N) * x[k];
+                dft[p][0] += this.W_real[p][k] * x[k];
+                dft[p][1] += this.W_image[p][k] * x[k];
             }
         }
         return dft;
+    }
+
+    /* Функція створює табдицю коефіцієнтів */
+    public void coef(int N){
+        this.W_real=new double[N][N];
+        this.W_image=new double[N][N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                W_real[i][j]=Math.cos(2 * Math.PI * i * j / N);
+                W_image[i][j]=Math.cos(2 * Math.PI * i * j / N);
+            }
+        }
     }
 
     public static void main(String[] args) {
